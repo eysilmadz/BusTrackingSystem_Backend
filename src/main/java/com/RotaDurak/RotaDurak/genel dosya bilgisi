@@ -1,0 +1,57 @@
+📂 Detaylı Açıklamalar
+1️⃣ com.example.banktransport (Ana Paket)
+-Tüm proje kodlarının içinde bulunduğu ana paket.
+2️⃣ config/ (Yapılandırma Ayarları)
+-Spring Security, CORS, JWT Token ayarları burada yapılır.
+    Örnek:
+        SecurityConfig.java
+        CorsConfig.java
+3️⃣ controller/ (API Uç Noktaları)
+-RESTful API uç noktalarını içeren Controller sınıfları bulunur.
+    Örnek:
+    UserController.java
+    AuthController.java
+4️⃣ dto/ (DTO - Veri Transfer Nesneleri)
+-Request ve Response DTO'ları burada olur.
+    Örnek:
+        UserDto.java
+        LoginRequest.java
+        RegisterRequest.java
+        AuthResponse.java
+5️⃣ exception/ (Hata Yönetimi)
+-Özel hata türleri ve hata yönetim mekanizmaları burada tanımlanır.
+    Örnek:
+        GlobalExceptionHandler.java
+        UserNotFoundException.java
+6️⃣ model/ (Veritabanı Tabloları - Entity)
+-Veritabanı tablolarını temsil eden @Entity sınıfları burada olur.
+    Örnek:
+        User.java
+        Transaction.java
+        BankAccount.java
+7️⃣ repository/ (Veritabanı Katmanı - Repository)
+-Spring Data JPA ile çalışan repository sınıfları burada olur.
+    Örnek:
+        TransactionRepository.java
+        UserRepository.java
+8️⃣ security/ (JWT ve Kimlik Doğrulama)
+-JWT Token, kimlik doğrulama, yetkilendirme mekanizmaları burada bulunur.
+    Örnek:
+        JwtUtil.java
+        JwtFilter.java
+        AuthService.java
+        CustomUserDetailsService.java
+9️⃣ service/ (İş Mantığı - Service)
+-İş mantığını barındıran servisler burada olur.
+    Örnek:
+        UserService.java
+        TransactionService.java
+🔟 util/ (Yardımcı Sınıflar)
+-Proje içinde genel amaçlı metodları içeren yardımcı sınıflar burada olur.
+    Örnek:
+        DateUtils.java
+        EmailValidator.java
+📂 resources/ (Konfigürasyon ve Statik Dosyalar)
+-application.properties veya application.yml: Veritabanı, port, güvenlik ayarları.
+-static/: Statik HTML, CSS, JS dosyaları.
+-templates/: Thymeleaf şablonları. (Eğer kullanılıyorsa)
