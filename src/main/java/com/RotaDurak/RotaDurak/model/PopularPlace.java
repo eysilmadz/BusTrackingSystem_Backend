@@ -22,6 +22,9 @@ public class PopularPlace {
     @Column(name = "location", nullable = false, length = 255)
     private String location;
 
+    @Column(name = "image", columnDefinition = "TEXT")
+    private String image;
+
     @ManyToOne
     @JoinColumn(name = "cityid", nullable = false)
     private City city;
