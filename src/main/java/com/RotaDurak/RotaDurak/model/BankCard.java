@@ -16,13 +16,14 @@ public class BankCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cardid")
     private Long id;
 
-    @Column(name = "cardType", nullable = false, length = 50)
-    private String cardtype;
+    @Column(name = "cardtype", nullable = false, length = 50)
+    private String cardType;
 
-    @Column(name = "cardNumber", nullable = false, unique = true, length = 16)
-    private String cardnumber;
+    @Column(name = "cardnumber", nullable = false, unique = true, length = 16)
+    private String cardNumber;
 
     @Column(name = "expirydate", nullable = false)
     private LocalDateTime expiryDate;
@@ -39,7 +40,7 @@ public class BankCard {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userid", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "bankCard", cascade = CascadeType.ALL, orphanRemoval = true)

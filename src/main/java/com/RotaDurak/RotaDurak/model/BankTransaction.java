@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class BankTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "transactionid")
     private Long id;
 
     @Column(name = "transactiontype", nullable = false, length = 50)
@@ -28,11 +29,11 @@ public class BankTransaction {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userid", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bankCardId", nullable = true) // NULL olabilir
+    @JoinColumn(name = "cardid", nullable = true) // NULL olabilir
     private BankCard bankCard;
 
     @PrePersist

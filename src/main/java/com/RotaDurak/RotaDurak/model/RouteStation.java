@@ -10,13 +10,14 @@ import lombok.*;
 public class RouteStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "routestationid")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "routeId", nullable = false)
+    @JoinColumn(name = "routeid", nullable = false)
     private Route route;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stationId", nullable = false)
+    @JoinColumn(name = "stationid", nullable = false)
     private Station station;
 }

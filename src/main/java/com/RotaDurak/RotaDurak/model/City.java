@@ -10,24 +10,9 @@ import lombok.*;
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cityid")
     private Long id;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
-
-    @OneToOne
-    @JoinColumn(name = "id", nullable = true)
-    private Station station;
-
-    @OneToOne
-    @JoinColumn(name = "id", nullable = true)
-    private Route route;
-
-    @OneToOne
-    @JoinColumn(name = "id", nullable = true)
-    private PopularPlace popularPlace;
-
-    @OneToOne
-    @JoinColumn(name = "id", nullable = true)
-    private CardReloadPoint cardReloadPoint;
 }

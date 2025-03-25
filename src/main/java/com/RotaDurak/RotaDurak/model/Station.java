@@ -11,6 +11,7 @@ public class Station {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "stationid")
     private Long id;
 
     @Column(name = "name", nullable = false, length = 100)
@@ -18,4 +19,8 @@ public class Station {
 
     @Column(name = "location", nullable = false, length = 255)
     private String location;
+
+    @ManyToOne
+    @JoinColumn(name = "cityid", nullable = false)
+    private City city;
 }

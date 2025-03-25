@@ -11,6 +11,7 @@ public class Route {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "routeid")
     private Long id;
 
     @Column(name = "name", nullable = false, length = 100)
@@ -18,4 +19,8 @@ public class Route {
 
     @Column(name = "line", nullable = false, length = 100)
     private String line;
+
+    @ManyToOne
+    @JoinColumn(name = "cityid", nullable = false)
+    private City city;
 }
