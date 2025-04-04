@@ -1,5 +1,6 @@
 package com.RotaDurak.RotaDurak.service;
 import com.RotaDurak.RotaDurak.dto.LoginRequest;
+import com.RotaDurak.RotaDurak.dto.LoginResponse;
 import com.RotaDurak.RotaDurak.dto.RegisterRequest;
 import com.RotaDurak.RotaDurak.model.User;
 import com.RotaDurak.RotaDurak.repository.UserRepository;
@@ -38,13 +39,19 @@ public class AuthService {
         return "Kayıt başarıyla tamamlandı.";
     }
 
-    public String login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail());
 
         if(user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Geçersiz email veya şifre");
         }
 
-        return jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(user.getEmail());
+
+        LoginResponse response = new LoginResponse();
+        response.setToken(token);
+        response.setEmail(user.getEmail());
+
+        return response;
     }
 }
