@@ -1,8 +1,10 @@
 package com.RotaDurak.RotaDurak.security;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
+
 import java.util.Date;
 
 @Service
@@ -24,5 +26,14 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
+    }
+
+    public boolean isTokenValid(String token) {
+        try{
+            Claims claims =Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody();
+            return claims.getExpiration().after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
