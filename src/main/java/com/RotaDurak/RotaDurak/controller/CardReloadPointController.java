@@ -24,8 +24,8 @@ public class CardReloadPointController {
         return cardReloadPointService.getReloadPointById(id);
     }
 
-    @PostMapping
-    public CardReloadPoint createReloadPoint(@RequestBody CardReloadPoint reloadPoint) {
-        return cardReloadPointService.createReloadPoint(reloadPoint);
+    @GetMapping("/city/{cityId}")
+    public List<CardReloadPoint> getReloadPointsByCity(@PathVariable Long cityId) {
+        return cardReloadPointService.getReloadPointsByCityId(cityId);
     }
 }

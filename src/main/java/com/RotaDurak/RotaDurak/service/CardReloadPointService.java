@@ -21,7 +21,7 @@ public class CardReloadPointService {
         return cardReloadPointRepository.findById(id);
     }
 
-    public CardReloadPoint createReloadPoint(CardReloadPoint reloadPoint) {
-        return cardReloadPointRepository.save(reloadPoint);
+    public List<CardReloadPoint> getReloadPointsByCityId(Long cityId) {
+        return cardReloadPointRepository.findByCity_Id(cityId);
     }
 }

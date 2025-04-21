@@ -27,4 +27,9 @@ public class RouteController {
     public Route createRoute(@RequestBody Route route) {
         return routeService.createRoute(route);
     }
+
+    @GetMapping("/byCityId")
+    public List<Route> getRoutesByCityId(@RequestParam Long cityId) {
+        return routeService.getRoutesByCityId(cityId);
+    }
 }

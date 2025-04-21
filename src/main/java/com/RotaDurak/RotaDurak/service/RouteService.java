@@ -23,4 +23,8 @@ public class RouteService {
     public Route createRoute(Route route) {
         return routeRepository.save(route);
     }
+
+    public List<Route> getRoutesByCityId(Long cityId) {
+        return routeRepository.findByCity_Id(cityId);
+    }
 }
