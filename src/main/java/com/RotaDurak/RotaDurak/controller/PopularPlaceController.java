@@ -27,4 +27,9 @@ public class PopularPlaceController {
     public PopularPlace createPopularPlace(@RequestBody PopularPlace place) {
         return popularPlaceService.createPopularPlace(place);
     }
+
+    @GetMapping("/byCityId")
+    public List<PopularPlace> getPopularPlacesByCityId(@RequestParam Long cityId) {
+        return popularPlaceService.getPopularPlacesByCityId(cityId);
+    }
 }

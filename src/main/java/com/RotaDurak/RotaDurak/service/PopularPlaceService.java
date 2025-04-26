@@ -23,4 +23,8 @@ public class PopularPlaceService {
     public PopularPlace createPopularPlace(PopularPlace place) {
         return popularPlaceRepository.save(place);
     }
+
+    public List<PopularPlace> getPopularPlacesByCityId(Long cityId) {
+        return popularPlaceRepository.findByCity_Id(cityId);
+    }
 }

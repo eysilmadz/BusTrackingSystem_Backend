@@ -3,7 +3,9 @@ import com.RotaDurak.RotaDurak.model.PopularPlace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PopularPlaceRepository extends JpaRepository<PopularPlace, Long> {
-    PopularPlace findByName(String name); // Popüler yer ismine göre arama sonra değişecek
+    List<PopularPlace> findByCity_Id(Long cityId);
 }
