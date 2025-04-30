@@ -1,4 +1,5 @@
 package com.RotaDurak.RotaDurak.model;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Route")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Route {
 
     @Id

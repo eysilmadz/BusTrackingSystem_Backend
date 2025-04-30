@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface RouteRepository extends JpaRepository<Route, Long> {
-    List<Route> findByCity_Id(Long cityId);
+    List<Route> findByCity_Id(Long cityId); //Şehre ait hatları getirir
 }

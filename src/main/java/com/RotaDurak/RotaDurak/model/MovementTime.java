@@ -27,8 +27,3 @@ public class MovementTime {
     @Column(nullable = false)
     private LocalTime time;
 }
-
-enum Direction{
-    starttoend,
-    endtostart
-}

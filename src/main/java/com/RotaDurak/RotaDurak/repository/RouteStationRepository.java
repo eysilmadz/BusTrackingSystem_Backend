@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface RouteStationRepository extends JpaRepository<RouteStation, Long>{
-    List<RouteStation> findByRoute(Route route); // Belirli bir rotaya ait istasyonları getir
+    List<RouteStation> findByRouteId(Long routeId); // Belirli bir rotaya ait istasyonları getir
+
+    List<RouteStation> findByStationId(Long stationId);
 }
