@@ -1,7 +1,9 @@
 package com.RotaDurak.RotaDurak.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.*;
 
 @Entity
 @Data
@@ -25,4 +27,18 @@ public class Route {
     @ManyToOne
     @JoinColumn(name = "cityid", nullable = false)
     private City city;
+
+    @Column(name = "shapeid", length = 100)
+    private String shape;
+
+    @ManyToMany
+    @JoinTable(
+            name = "routestation",
+            joinColumns = @JoinColumn(name = "routeid"),
+            inverseJoinColumns = @JoinColumn(name = "stationid")
+    )
+    @JsonIgnore
+    private Set<Station> stations = new HashSet<>();
+
+
 }

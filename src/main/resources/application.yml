@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: RotaDurak
+
+  output:
+    ansi:
+      enabled: always
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/RotaDurakDb
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+
+    #Hibernate ayarları
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  #Kafka ayarları
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: bus-websocket
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+    bootstrap-servers: localhost:9092
+
+server:
+  tomcat:
+    max-swallow-size: 100MB

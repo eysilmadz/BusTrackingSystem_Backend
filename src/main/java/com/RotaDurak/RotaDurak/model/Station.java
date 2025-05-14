@@ -1,7 +1,9 @@
 package com.RotaDurak.RotaDurak.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.*;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -10,7 +12,6 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "Station")
 public class Station {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stationid")
@@ -25,4 +26,8 @@ public class Station {
     @ManyToOne
     @JoinColumn(name = "cityid", nullable = false)
     private City city;
+
+    @ManyToMany(mappedBy = "stations")
+    @JsonIgnore
+    private Set<Route> routes = new HashSet<>();
 }
