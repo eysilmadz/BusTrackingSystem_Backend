@@ -76,13 +76,13 @@ public class BusSimulationService {
 
             // 4) Mesajı Kafka'ya publish et
             kafkaProducerService.send(new PositionMessage(routeId, curr.getLat(), curr.getLon(), Instant.now(), direction));
-            log.debug("▶️ idx={} → lat={},lon={}", i, curr.getLat(), curr.getLon());
+            log.debug("▶️ idx={} → lat={},lon={}, routeId={}", i, curr.getLat(), curr.getLon(), routeId);
 
             // 4b) Durakta mıyız? (yakınlık kontrolü)
             boolean isStation = stationPoints.stream()
                     .anyMatch(st -> distanceKm.apply(curr, st) <= stationThresholdKm);
             if (isStation) {
-                log.info("⏸ Durakta (idx={}) → {}s bekleniyor.", i, dwellSeconds);
+                log.info("⏸ Durakta (idx={}) → {}s bekleniyor., routeId={}", i, dwellSeconds,routeId);
                 try {
                     Thread.sleep(dwellSeconds * 1000L);
                 } catch (InterruptedException e) {
