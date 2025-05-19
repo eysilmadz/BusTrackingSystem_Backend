@@ -27,4 +27,9 @@ public class StationController {
     public Station createStation(@RequestBody Station station) {
         return stationService.createStation(station);
     }
+
+    @GetMapping("/city/{cityId}")
+    public List<Station> getStationsByCity(@PathVariable Long cityId) {
+        return stationService.getStationsByCityId(cityId);
+    }
 }

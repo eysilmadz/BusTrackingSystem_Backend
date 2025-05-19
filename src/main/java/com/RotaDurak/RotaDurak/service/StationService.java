@@ -23,4 +23,8 @@ public class StationService {
     public Station createStation(Station station) {
         return stationRepository.save(station);
     }
+
+    public List<Station> getStationsByCityId(Long cityId) {
+        return stationRepository.findAllByCity_Id(cityId);
+    }
 }
