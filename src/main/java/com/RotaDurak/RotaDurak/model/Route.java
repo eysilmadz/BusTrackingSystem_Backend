@@ -39,6 +39,4 @@ public class Route {
     )
     @JsonIgnore
     private Set<Station> stations = new HashSet<>();
-
-
 }

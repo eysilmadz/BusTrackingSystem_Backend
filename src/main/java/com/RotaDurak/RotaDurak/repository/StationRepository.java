@@ -11,4 +11,6 @@ public interface StationRepository extends JpaRepository<Station, Long> {
     List<Station> findAllByCity_Id(Long cityId);
 
     Optional<Station> findByNameAndLocation(String name, String location);
+
+    List<Station> getStationById(Long id);
 }
