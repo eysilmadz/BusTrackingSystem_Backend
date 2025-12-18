@@ -15,4 +15,5 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
 
     Optional<Route> findByLineAndName(String line, String name);
 
+    List<Route> findByCityId(Long cityId);
 }

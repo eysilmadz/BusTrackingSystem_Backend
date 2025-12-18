@@ -20,4 +20,11 @@ public class CityService {
                 .map(city -> new CityDto(city.getId(), city.getName()))
                 .collect(Collectors.toList());
     }
+
+    public City getCityById(Long id) {
+        return cityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Şehir bulunamadı: " + id));
+    }
+
+
 }

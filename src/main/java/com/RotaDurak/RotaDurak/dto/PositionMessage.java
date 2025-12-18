@@ -17,5 +17,7 @@ public class PositionMessage {
     private double longitude;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Instant timestamp;
+    private Integer speed;
+    private String imei;
     Direction direction;
 }

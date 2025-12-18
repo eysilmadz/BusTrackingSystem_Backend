@@ -75,7 +75,9 @@ public class BusSimulationService {
             PointDto curr = points.get(i);
 
             // 4) Mesajı Kafka'ya publish et
-            kafkaProducerService.send(new PositionMessage(routeId, curr.getLat(), curr.getLon(), Instant.now(), direction));
+
+            Integer speed    = Integer.parseInt("speed");
+            kafkaProducerService.send(new PositionMessage(routeId, curr.getLat(), curr.getLon(), Instant.now(), speed,  "SIMULATOR", direction));
             log.debug("▶️ idx={} → lat={},lon={}, routeId={}", i, curr.getLat(), curr.getLon(), routeId);
 
             // 4b) Durakta mıyız? (yakınlık kontrolü)

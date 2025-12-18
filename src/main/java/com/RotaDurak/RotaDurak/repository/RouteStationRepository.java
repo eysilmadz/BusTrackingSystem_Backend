@@ -26,4 +26,9 @@ public interface RouteStationRepository extends JpaRepository<RouteStation, Long
 
     Long route(Route route);
 
+    @Query("SELECT rs FROM RouteStation rs WHERE rs.route.city = :cityId")
+    List<RouteStation> findByRoute_CityId(@Param("cityId") Long cityId);
+
+    List<RouteStation> findByRoute_City_Id(Long cityId);
+
 }
