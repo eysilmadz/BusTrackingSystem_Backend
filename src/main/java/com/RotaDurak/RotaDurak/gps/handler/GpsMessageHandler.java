@@ -1,11 +1,13 @@
 package com.RotaDurak.RotaDurak.gps.handler;
 
+import com.RotaDurak.RotaDurak.dto.DeviceStatusMessage;
 import com.RotaDurak.RotaDurak.dto.PositionMessage;
 import com.RotaDurak.RotaDurak.gps.parser.MockGpsParser;
 import com.RotaDurak.RotaDurak.model.DeviceStatus;
 import com.RotaDurak.RotaDurak.repository.GpsDeviceRepository;
 import com.RotaDurak.RotaDurak.service.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -18,6 +20,7 @@ public class GpsMessageHandler {
     private final GpsDeviceRepository gpsDeviceRepository;
     private final MockGpsParser parser;
     private final KafkaProducerService kafkaProducerService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public void handle(String rawMessage) {
 
@@ -31,14 +34,28 @@ public class GpsMessageHandler {
 
         gpsDeviceRepository.findByImei(imei).ifPresentOrElse(device -> {
 
-            if (device.getStatus() != DeviceStatus.ACTIVE) {
+            if (device.getStatus() != DeviceStatus.ONLINE) {
                 System.out.println("🚫 BLOCKED DEVICE: " + imei);
                 return;
             }
 
             // heartbeat
             device.setLastSeenAt(LocalDateTime.now());
+            device.setStatus(DeviceStatus.ONLINE);
             gpsDeviceRepository.save(device);
+
+            // 🔔 ONLINE bildirimi
+            DeviceStatusMessage statusMessage =
+                    new DeviceStatusMessage(
+                            device.getImei(),
+                            device.getRoute().getId(),
+                            DeviceStatus.ONLINE
+                    );
+
+            messagingTemplate.convertAndSend(
+                    "/topic/device-status/" + device.getRoute().getId(),
+                    statusMessage
+            );
 
             // güvenli parse
             double latitude  = Double.parseDouble(data.get("lat"));

@@ -24,7 +24,7 @@ public class GPSDevice {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private DeviceStatus status = DeviceStatus.ACTIVE;
+    private DeviceStatus status = DeviceStatus.ONLINE;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "routeid")
