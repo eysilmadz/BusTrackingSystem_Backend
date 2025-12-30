@@ -6,11 +6,11 @@ spring:
     ansi:
       enabled: always
 
-  datasource:
-    url: jdbc:postgresql://postgres:5432/RotaDurakDb
-    username: postgres
-    password: 123456
-    driver-class-name: org.postgresql.Driver
+  #datasource:
+  #  url: jdbc:postgresql://postgres:5432/RotaDurakDb
+  #  username: postgres
+  #  password: 123456
+  #  driver-class-name: org.postgresql.Driver
 
     #Hibernate ayarları
   jpa:
