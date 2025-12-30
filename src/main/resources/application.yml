@@ -7,7 +7,7 @@ spring:
       enabled: always
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/RotaDurakDb
+    url: jdbc:postgresql://postgres:5432/RotaDurakDb
     username: postgres
     password: 123456
     driver-class-name: org.postgresql.Driver
@@ -35,7 +35,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: '*'
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
 
 server:
   tomcat:
