@@ -12,6 +12,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private WalletService walletService;
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -21,7 +24,9 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+        walletService.createWallet(saved); // otomatik cüzdan
+        return saved;
     }
 
     public void deleteUser(Long id) {

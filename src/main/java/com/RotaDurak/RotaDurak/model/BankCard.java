@@ -45,4 +45,17 @@ public class BankCard {
 
     @OneToMany(mappedBy = "bankCard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BankTransaction> transactions;
+
+    // Sanal kart alanları — cardType="VIRTUAL" ise bunlar dolu gelir
+    @Column(name = "qrcode", unique = true, length = 255)
+    private String qrCode; // UUID bazlı, ödeme sırasında taranır
+
+    @Column(name = "nfctoken", unique = true, length = 255)
+    private String nfcToken; // NFC okuyucu bu token'ı doğrular
+
+    @Column(name = "isactive", nullable = false)
+    private Boolean isActive = true;
+
+    @Column(name = "nickname", length = 50)
+    private String nickname; // "Benim Kartım" gibi kullanıcı tanımlı isim
 }

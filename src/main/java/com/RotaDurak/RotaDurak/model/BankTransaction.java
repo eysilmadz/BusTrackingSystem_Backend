@@ -45,4 +45,18 @@ public class BankTransaction {
             transactionDate = LocalDateTime.now();
         }
     }
+
+    // TransactionType sabitleri
+    // "LOAD_BALANCE"  → İYZİCO ile para yükleme
+    // "BUS_PAYMENT"   → Otobüs ödemesi (NFC/QR)
+    // "REFUND"        → İade
+
+    @Column(name = "status", nullable = false, length = 20)
+    private String status = "PENDING"; // PENDING | SUCCESS | FAILED
+
+    @Column(name = "iyzicoreferencecode", length = 100)
+    private String iyzicoReferenceCode; // İYZİCO'dan dönen referans
+
+    @Column(name = "description", length = 255)
+    private String description; // "Hat 34 - Kadıköy" gibi
 }

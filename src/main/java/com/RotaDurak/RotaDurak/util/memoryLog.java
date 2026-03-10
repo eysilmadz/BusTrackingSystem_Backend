@@ -12,11 +12,11 @@ public class memoryLog {
         long totalMemory = runtime.totalMemory();
         long maxMemory = runtime.maxMemory();
 
-        System.out.println(String.format(
+        /*System.out.println(String.format(
                 "🧠 Memory | Used: %d MB | Total: %d MB | Max: %d MB",
                 usedMemory / 1024 / 1024,
                 totalMemory / 1024 / 1024,
                 maxMemory / 1024 / 1024
-        ));
+        ));*/
     }
 }

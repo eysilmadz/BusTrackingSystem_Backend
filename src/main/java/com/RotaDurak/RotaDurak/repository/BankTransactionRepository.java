@@ -9,4 +9,5 @@ import java.util.List;
 public interface BankTransactionRepository extends JpaRepository<BankTransaction, Long> {
     List<BankTransaction> findByUserId(Long id); // Kullanıcının tüm işlemlerini getirir
     List<BankTransaction> findByBankCardId(Long bankCardId); // Belirli bir kartın işlemlerini getirir
+    boolean existsByIyzicoReferenceCode(String iyzicoReferenceCode);
 }

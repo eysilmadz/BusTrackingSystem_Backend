@@ -104,6 +104,13 @@
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
 
+		<!--İYZİCO Entegrasyonu-->
+		<dependency>
+			<groupId>com.iyzipay</groupId>
+			<artifactId>iyzipay-java</artifactId>
+			<version>2.0.141</version>
+		</dependency>
+
 		<!-- Spring Security Crypto -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
