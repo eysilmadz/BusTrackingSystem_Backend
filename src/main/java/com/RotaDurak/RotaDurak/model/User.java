@@ -45,10 +45,11 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BankCard> bankCards;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BankTransaction> transactions;
 }

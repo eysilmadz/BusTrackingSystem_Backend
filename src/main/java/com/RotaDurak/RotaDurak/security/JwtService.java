@@ -15,7 +15,7 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis()+ 86400000)) //1 gün geçerli
+                .setExpiration(new Date(System.currentTimeMillis()+ 604800000)) //7 gün geçerli
                 .signWith(SignatureAlgorithm.HS256, KEY)
                 .compact();
     }
