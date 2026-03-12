@@ -25,4 +25,13 @@ public class LoadBalanceRequest {
 
     @JsonProperty("cvc")
     private String cvc;
+
+    @JsonProperty("saveCard")
+    private boolean saveCard; // kartı kaydet mi?
+
+    @JsonProperty("cardToken")
+    private String cardToken;
+
+    @JsonProperty("cardUserKey")
+    private String cardUserKey; // daha önce kaydedilmiş kullanıcı anahtarı (varsa)
 }

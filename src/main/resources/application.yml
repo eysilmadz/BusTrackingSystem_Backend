@@ -42,7 +42,7 @@ iyzico:
   apiKey: sandbox-mxnjlDjEhuguSRn1l9WS8sQFHtkoO7F9
   secretKey: sandbox-j6wUhk0FW2YhA0I2UOuNAWfg8NbSBuNE
   baseUrl: https://sandbox-api.iyzipay.com
-  callbackUrl: http://192.168.84.97:8080/api/payment/callback
+  callbackUrl: http://192.168.218.97:8080/api/payment/callback
 
 server:
   tomcat:

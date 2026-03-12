@@ -3,6 +3,7 @@ package com.RotaDurak.RotaDurak.service;
 import com.RotaDurak.RotaDurak.dto.CheckoutFormRequest;
 import com.RotaDurak.RotaDurak.dto.LoadBalanceRequest;
 import com.RotaDurak.RotaDurak.dto.PaymentResult;
+import com.RotaDurak.RotaDurak.model.BankCard;
 import com.RotaDurak.RotaDurak.model.BankTransaction;
 import com.RotaDurak.RotaDurak.model.User;
 import com.RotaDurak.RotaDurak.repository.BankCardRepository;
@@ -71,12 +72,28 @@ public class IyzicoPaymentService {
 
         // Kart bilgisi
         PaymentCard paymentCard = new PaymentCard();
-        paymentCard.setCardHolderName(request.getCardHolderName());
-        paymentCard.setCardNumber(request.getCardNumber());
-        paymentCard.setExpireMonth(request.getExpireMonth());
-        paymentCard.setExpireYear(request.getExpireYear());
-        paymentCard.setCvc(request.getCvc());
-        paymentCard.setRegisterCard(0);
+        if (request.getCardToken() != null) {
+            // Kayıtlı kart ile ödeme
+            paymentCard.setCardToken(request.getCardToken());
+            paymentCard.setCardUserKey(request.getCardUserKey());
+            paymentCard.setCvc(request.getCvc());
+            paymentCard.setRegisterCard(0);
+        } else {
+            // Manuel kart girişi
+            paymentCard.setCardHolderName(request.getCardHolderName());
+            paymentCard.setCardNumber(request.getCardNumber());
+            paymentCard.setExpireMonth(request.getExpireMonth());
+            paymentCard.setExpireYear(request.getExpireYear());
+            paymentCard.setCvc(request.getCvc());
+            if (request.isSaveCard()) {
+                paymentCard.setRegisterCard(1);
+                if (request.getCardUserKey() != null) {
+                    paymentCard.setCardUserKey(request.getCardUserKey());
+                }
+            } else {
+                paymentCard.setRegisterCard(0);
+            }
+        }
         paymentRequest.setPaymentCard(paymentCard);
 
         // Alıcı bilgileri
@@ -113,7 +130,6 @@ public class IyzicoPaymentService {
         // İYZİCO'ya gönder
         Payment result = Payment.create(paymentRequest, iyzicoOptions);
 
-
         // İYZİCO'dan dönen cevabı logla
         System.out.println(">>> iyzico status: " + result.getStatus());
         System.out.println(">>> iyzico errorCode: " + result.getErrorCode());
@@ -135,6 +151,28 @@ public class IyzicoPaymentService {
 
             // Wallet bakiyesini güncelle
             walletService.loadBalance(request.getUserId(), request.getAmount());
+
+            // Kart kaydedildiyse BankCard tablosuna token'ı kaydet
+            if (request.isSaveCard() && result.getCardToken() != null) {
+                String lastFour = request.getCardNumber().replace(" ", "");
+                lastFour = lastFour.substring(lastFour.length() - 4);
+                String masked = "**** **** **** " + lastFour;
+
+                BankCard card = new BankCard();
+                card.setUser(user);
+                card.setCardToken(result.getCardToken());
+                card.setCardUserKey(result.getCardUserKey());
+                card.setCardNumber(masked);
+                card.setMaskedNumber(masked);
+                card.setCardAlias(request.getCardHolderName());
+                card.setCardProvider(result.getCardFamily() != null ? result.getCardFamily() : "CARD");
+                card.setCardType("CREDIT");
+                card.setIsActive(true);
+
+                bankCardRepository.save(card);
+                System.out.println(">>> Kart kaydedildi: " + masked);
+            }
+
             return new PaymentResult(true, "Para yükleme başarılı.", result.getPaymentId());
         } else {
             transaction.setStatus("FAILED");

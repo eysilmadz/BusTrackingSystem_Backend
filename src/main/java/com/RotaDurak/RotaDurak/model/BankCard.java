@@ -1,4 +1,5 @@
 package com.RotaDurak.RotaDurak.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -22,13 +23,13 @@ public class BankCard {
     @Column(name = "cardtype", nullable = false, length = 50)
     private String cardType;
 
-    @Column(name = "cardnumber", nullable = false, unique = true, length = 16)
+    @Column(name = "cardnumber", nullable = true, unique = true, length = 19)
     private String cardNumber;
 
-    @Column(name = "expirydate", nullable = false)
+    @Column(name = "expirydate", nullable = true)
     private LocalDateTime expiryDate;
 
-    @Column(name = "cardprovider", nullable = false, length = 50)
+    @Column(name = "cardprovider", nullable = true, length = 50)
     private String cardProvider;
 
     @Column(name = "createdat", nullable = false, updatable = false)
@@ -39,10 +40,12 @@ public class BankCard {
         createdAt = LocalDateTime.now();
     }
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid", nullable = false)
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bankCard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BankTransaction> transactions;
 
@@ -58,4 +61,16 @@ public class BankCard {
 
     @Column(name = "nickname", length = 50)
     private String nickname; // "Benim Kartım" gibi kullanıcı tanımlı isim
+
+    @Column(name = "cardtoken", length = 255)
+    private String cardToken;
+
+    @Column(name = "carduserkey", length = 255)
+    private String cardUserKey;
+
+    @Column(name = "maskednumber", length = 50)
+    private String maskedNumber;
+
+    @Column(name = "cardalias", length = 100)
+    private String cardAlias;
 }
