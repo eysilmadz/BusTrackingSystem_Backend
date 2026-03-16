@@ -3,8 +3,10 @@ import com.RotaDurak.RotaDurak.model.BankCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BankCardRepository extends JpaRepository<BankCard, Long> {
     List<BankCard> findByUserId(Long id); //Kullanıcının kartlarını getirir
+    Optional<BankCard> findByNfcToken(String nfcToken);
 }

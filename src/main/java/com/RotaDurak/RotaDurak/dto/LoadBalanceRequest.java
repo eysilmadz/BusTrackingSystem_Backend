@@ -34,4 +34,10 @@ public class LoadBalanceRequest {
 
     @JsonProperty("cardUserKey")
     private String cardUserKey; // daha önce kaydedilmiş kullanıcı anahtarı (varsa)
+
+    @JsonProperty("targetType")
+    private String targetType; // "WALLET" | "VIRTUAL_CARD"
+
+    @JsonProperty("cardId")
+    private Long cardId; // sanal kart seçilince
 }

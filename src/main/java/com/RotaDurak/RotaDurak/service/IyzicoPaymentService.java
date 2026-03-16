@@ -43,6 +43,9 @@ public class IyzicoPaymentService {
     @Autowired
     private BankCardRepository bankCardRepository;
 
+    @Autowired
+    private BankCardService bankCardService;
+
     @Value("${iyzico.callbackUrl}")
     private String callbackUrl;
 
@@ -147,10 +150,20 @@ public class IyzicoPaymentService {
 
         if ("success".equals(result.getStatus())) {
             transaction.setStatus("SUCCESS");
-            transactionRepository.save(transaction);
 
-            // Wallet bakiyesini güncelle
-            walletService.loadBalance(request.getUserId(), request.getAmount());
+            System.out.println(">>> targetType: " + request.getTargetType());
+            System.out.println(">>> cardId: " + request.getCardId());
+
+            // Nereye yüklenecek?
+            if ("VIRTUAL_CARD".equals(request.getTargetType()) && request.getCardId() != null) {
+                bankCardService.loadBalanceToCard(request.getCardId(), request.getAmount());
+                transaction.setDescription("Sanal karta para yükleme - İYZİCO");
+            } else {
+                walletService.loadBalance(request.getUserId(), request.getAmount());
+                transaction.setDescription("Cüzdana para yükleme - İYZİCO");
+            }
+
+            transactionRepository.save(transaction);
 
             // Kart kaydedildiyse BankCard tablosuna token'ı kaydet
             if (request.isSaveCard() && result.getCardToken() != null) {

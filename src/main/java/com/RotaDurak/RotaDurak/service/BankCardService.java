@@ -61,4 +61,31 @@ public class BankCardService {
 
         return bankCardRepository.save(virtualCard);
     }
+
+    public BankCard loadBalanceToCard(Long cardId, Double amount) {
+        if (amount <= 0) throw new RuntimeException("Geçersiz tutar.");
+
+        BankCard card = bankCardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Kart bulunamadı."));
+
+        card.setBalance(card.getBalance() + amount);
+        return bankCardRepository.save(card);
+    }
+
+    public BankCard deductBalanceFromCard(Long cardId, Double amount) {
+        if (amount <= 0) throw new RuntimeException("Geçersiz tutar.");
+
+        BankCard card = bankCardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Kart bulunamadı."));
+
+        if (card.getBalance() < amount) throw new RuntimeException("Yetersiz kart bakiyesi.");
+
+        card.setBalance(card.getBalance() - amount);
+        return bankCardRepository.save(card);
+    }
+
+    public BankCard getCardByNfcToken(String nfcToken) {
+        return bankCardRepository.findByNfcToken(nfcToken)
+                .orElseThrow(() -> new RuntimeException("Geçersiz NFC token."));
+    }
 }

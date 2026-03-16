@@ -73,4 +73,7 @@ public class BankCard {
 
     @Column(name = "cardalias", length = 100)
     private String cardAlias;
+
+    @Column(name = "balance", nullable = false)
+    private Double balance = 0.0;
 }

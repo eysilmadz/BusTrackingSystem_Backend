@@ -26,8 +26,8 @@ public class BankCardController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<BankCard> getCardsByUserId(@PathVariable Long id) {
-        return bankCardService.getCardsByUserId(id);
+    public List<BankCard> getCardsByUserId(@PathVariable Long userId) {
+        return bankCardService.getCardsByUserId(userId);
     }
 
     @PostMapping
