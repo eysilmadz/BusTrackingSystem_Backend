@@ -24,8 +24,8 @@ public class BankTransactionController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<BankTransaction> getTransactionsByUserId(@PathVariable Long id) {
-        return bankTransactionService.getTransactionsByUserId(id);
+    public List<BankTransaction> getTransactionsByUserId(@PathVariable Long userId) {
+        return bankTransactionService.getTransactionsByUserId(userId);
     }
 
     @PostMapping

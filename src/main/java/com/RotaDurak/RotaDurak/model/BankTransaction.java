@@ -1,4 +1,5 @@
 package com.RotaDurak.RotaDurak.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
@@ -28,10 +29,12 @@ public class BankTransaction {
     @Column(name = "createdat", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid", nullable = false)
     private User user;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cardid", nullable = true) // NULL olabilir
     private BankCard bankCard;
