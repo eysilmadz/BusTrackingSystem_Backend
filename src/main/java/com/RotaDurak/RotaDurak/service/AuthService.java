@@ -6,7 +6,7 @@ import com.RotaDurak.RotaDurak.model.User;
 import com.RotaDurak.RotaDurak.repository.UserRepository;
 import com.RotaDurak.RotaDurak.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +17,8 @@ public class AuthService {
     @Autowired
     private JwtService jwtService;
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public String register(RegisterRequest request) {
         System.out.println("Register Request: " + request); // Log ekle

@@ -2,6 +2,7 @@ package com.RotaDurak.RotaDurak.service;
 import com.RotaDurak.RotaDurak.model.User;
 import com.RotaDurak.RotaDurak.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,9 @@ public class UserService {
 
     @Autowired
     private WalletService walletService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -42,5 +46,21 @@ public class UserService {
             user.setPhoneNumber(userDetails.getPhoneNumber());
             return userRepository.save(user);
         }).orElseThrow(()->new RuntimeException("User Not Found"));
+    }
+
+    public void changePassword(Long id, String currentPassword, String newPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Mevcut şifre hatalı.");
+        }
+
+        if (newPassword.length() < 6) {
+            throw new RuntimeException("Yeni şifre en az 6 karakter olmalıdır.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }
