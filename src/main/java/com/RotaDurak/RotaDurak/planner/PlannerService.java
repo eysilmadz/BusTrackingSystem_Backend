@@ -81,7 +81,7 @@ public class PlannerService {
                 return Collections.emptyList();
             }
 
-            return graph.shortestPath(startId, goalId);
+            return graph.shortestPath(startId, goalId, costType);
         } catch (Exception e) {
             logger.error("Error planning route", e);
             return Collections.emptyList();
@@ -107,7 +107,7 @@ public class PlannerService {
                 return Collections.emptyList();
             }
 
-            List<Long> path = graph.shortestPath(startId, goalId);
+            List<Long> path = graph.shortestPath(startId, goalId, costType);
 
             if (path.isEmpty()) {
                 logger.warn("No path found from station {} to station {}", startId, goalId);

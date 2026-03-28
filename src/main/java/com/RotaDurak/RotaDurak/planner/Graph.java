@@ -8,7 +8,7 @@ public class Graph {
     public static class Edge {
         public final long toStationId;
         public final double weight;
-        public final Long routeId; //null ise yürüyüş ya da transfer kenarı
+        public final Long routeId; //null ise yürüyüş
 
         public Edge(long toStationId, double weight, Long routeId) {
             this.toStationId = toStationId;
@@ -22,7 +22,6 @@ public class Graph {
 
     public void addEdge(long from, long to, double weight, Long routeId) {
         adj.computeIfAbsent(from, k -> new ArrayList<>()).add(new Edge(to,weight,routeId));
-        adj.computeIfAbsent(to,   k -> new ArrayList<>()).add(new Edge(from,weight,routeId));
     }
 
     /** Dışarıya komşu kenarlarını açmak için */
@@ -30,54 +29,92 @@ public class Graph {
         return adj.getOrDefault(stationId, Collections.emptyList());
     }
 
+    //State: (stationId, routeId) çifti
+    private record State(long stationId, Long routeId) {}
+
     private static class Node implements Comparable<Node> {
-        final long stationId;
-        final double distance;
-        Node(long stationId, double distance) {
-            this.stationId = stationId;
-            this.distance = distance;
+        final State state;
+        final double cost;
+
+        Node(State state, double cost) {
+            this.state = state;
+            this.cost = cost;
         }
+
         @Override
         public int compareTo(Node o) {
-            return Double.compare(this.distance, o.distance);
+            return Double.compare(this.cost, o.cost);
         }
     }
 
-        /**
-         * Dijkstra algoritması: start'tan goal'a en kısa yolu bulur.
-         * @return stationId listesi (start → … → goal)
-         */
-        public List<Long> shortestPath(long start,long goal) {
+    /**
+     * Aktarma cezalı Dijkstra.
+     * State = (istasyon, mevcut hat) — hat değişince penalty uygulanır.
+     *
+     * @param start     başlangıç istasyon ID
+     * @param goal      hedef istasyon ID
+     * @param costType  maliyet tipi (aktarma cezasını belirler)
+     * @return stationId listesi (start → … → goal), bulunamazsa boş liste
+     */
+    public List<Long> shortestPath(long start,long goal, CostType costType) {
+            double penalty = CostWeights.getTransferPenalty(costType);
+
             //PriorityQueue<(dist, stationId)>
-            Map<Long, Double> dist = new HashMap<>();
-            Map<Long,Long> prev = new HashMap<>();
+            Map<State, Double> dist = new HashMap<>();
+            Map<State, State> prev = new HashMap<>();
             PriorityQueue<Node> pq = new PriorityQueue<>();
 
-            dist.put(start,0.0);
-            pq.add(new Node(start, 0.0));
+            // Başlangıç: hiçbir hatta binmemişiz (routeId = null)
+            State startState = new State(start, null);
+            dist.put(startState, 0.0);
+            pq.add(new Node(startState, 0.0));
+
+            State goalState = null;
+
             while (!pq.isEmpty()) {
-                Node node = pq.poll();
-                double d = node.distance;
-                long u = node.stationId;
+                Node cur = pq.poll();
+                double d = cur.cost;
+                State u = cur.state;
 
-                if(d > dist.getOrDefault(u, Double.POSITIVE_INFINITY)) continue;
-                if(u == goal) break;
+                if (d > dist.getOrDefault(u, Double.POSITIVE_INFINITY)) continue;
 
-                for (Edge e : getNeighbors(u)) {
-                    double nd = d + e.weight;
-                    if (nd < dist.getOrDefault(e.toStationId, Double.POSITIVE_INFINITY)) {
-                        dist.put(e.toStationId, nd);
-                        prev.put(e.toStationId, u);
-                        pq.add(new Node(e.toStationId, nd));
+                if (u.stationId() == goal) {
+                    goalState = u;
+                    break;
+                }
+
+                for (Edge e : getNeighbors(u.stationId())) {
+                    // Hat değişimi var mı?
+                    boolean isTransfer = (u.routeId() != null)
+                            && (e.routeId != null)
+                            && (!e.routeId.equals(u.routeId()));
+
+                    double nd = d + e.weight + (isTransfer ? penalty : 0.0);
+                    State next = new State(e.toStationId, e.routeId);
+
+                    if (nd < dist.getOrDefault(next, Double.POSITIVE_INFINITY)) {
+                        dist.put(next, nd);
+                        prev.put(next, u);
+                        pq.add(new Node(next, nd));
                     }
                 }
-            }
+    }
 
-        //geri izleme
+        if (goalState == null) {
+            // goal state bulunamadıysa, en düşük maliyetli goal state'i ara
+            goalState = dist.keySet().stream()
+                    .filter(s -> s.stationId() == goal)
+                    .min(Comparator.comparingDouble(s -> dist.getOrDefault(s, Double.MAX_VALUE)))
+                    .orElse(null);
+        }
+
+        if (goalState == null) return Collections.emptyList();
+
+        // Geri izleme
         List<Long> path = new ArrayList<>();
-        Long cur = goal;
-        while (cur != null && cur != start) {
-            path.add(cur);
+        State cur = goalState;
+        while (cur != null && cur.stationId() != start) {
+            path.add(cur.stationId());
             cur = prev.get(cur);
         }
         path.add(start);
@@ -85,16 +122,20 @@ public class Graph {
         return path;
     }
 
-    //İki nokta arasındaki haversine mesafesini km cinsinden döner
-    public static double haversineKm(double lat1,double lon1, double lat2,double lon2) {
+    // Geriye dönük uyumluluk için (costType olmadan çağrılırsa TIME varsayılan)
+    public List<Long> shortestPath(long start, long goal) {
+        return shortestPath(start, goal, CostType.TIME);
+    }
+
+    public static double haversineKm(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371;
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLon = Math.toRadians(lon2-lon1);
-        double a = Math.sin(dLat/2)*Math.sin(dLat/2)
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
                 + Math.cos(Math.toRadians(lat1))
                 * Math.cos(Math.toRadians(lat2))
-                * Math.sin(dLon/2)*Math.sin(dLon/2);
-        double c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     }
 }
