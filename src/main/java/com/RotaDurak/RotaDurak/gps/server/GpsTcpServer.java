@@ -42,7 +42,6 @@ public class GpsTcpServer {
                 byte[] data = new byte[bytesRead];
                 System.arraycopy(buffer, 0, data, 0, bytesRead);
 
-                // HEX log
                 StringBuilder hex = new StringBuilder();
                 for (byte b : data) hex.append(String.format("%02X ", b));
                 System.out.println("📥 RAW HEX: " + hex);
@@ -50,8 +49,9 @@ public class GpsTcpServer {
                 handler.handle(data, socket);
             }
         } catch (Exception e) {
-            System.out.println("❌ GPS client disconnected: " + socket.getRemoteSocketAddress());
+            System.out.println("❌ GPS client error: " + e.getMessage());
         } finally {
+            handler.onDisconnect(socket); // IMEI map temizle
             try { socket.close(); } catch (Exception ignored) {}
         }
     }
